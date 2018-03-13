@@ -44,12 +44,12 @@ private:
 inline string NodeProvider::buildRequestBody(float srcLat, float srcLng, float dstLat, float dstLng) {
     return nlohmann::json{
         {"src", {
-            {"x", srcLat},
-            {"y", srcLng}
+            {"x", srcLng},
+            {"y", srcLat}
         }},
         {"dst", {
-            {"x", dstLat},
-            {"y", dstLng}
+            {"x", dstLng},
+            {"y", dstLat}
         }}
     }.dump();
 }
@@ -83,8 +83,8 @@ inline vector<float> NodeProvider::parseResponse(string body) {
     vector<float> path;
     nlohmann::json obj = nlohmann::json::parse(body);
     for (auto &point : obj["path"]) {
-        path.push_back(point["x"]);
         path.push_back(point["y"]);
+        path.push_back(point["x"]);
     }
     return path;
 }
