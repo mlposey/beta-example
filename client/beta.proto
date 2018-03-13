@@ -1,0 +1,57 @@
+syntax = "proto3";
+package betagrpc;
+
+service Beta {
+    /**
+     * GetRoute retrieves a route that answers the given query.
+     *
+     * This RPC will invoke the cache for a route that matches the
+     * query. It will fail if the cache could not fulfill the request.
+     */
+    rpc GetRoute(RouteQuery) returns (Route) {}
+
+    /**
+     * MustGetRoute retrieves a route that answers the given query.
+     *
+     * This RPC will use a cache invocation to resolve the request and
+     * if unsuccessful, it will default to a configured path provider
+     * for the answer. That route will then be cached and returned.
+     *
+     * It is possible that the provider will not have the answer either.
+     * Under that circumstance, the operation will fail.
+     */
+    rpc MustGetRoute(RouteQuery) returns (Route) {}
+
+    /**
+     * AddRoute adds a route to the cache.
+     *
+     * Currently, the system does not assess the uniqueness of the given
+     * route. One should take care to only add routes which are not subpaths
+     * of any route in the current cache. Until a solution is implemented,
+     * default to MustGetRoute to guarantee an optimal cache.
+     */
+    rpc AddRoute(Route) returns (AddResponse) {}
+}
+
+// Node defines an element of a route.
+message Node {
+    float latitude = 1;
+    float longitude = 2;
+}
+
+// Route consists of an ordered collection of nodes.
+message Route {
+    repeated Node nodes = 1;
+    double distance = 2;
+}
+
+// RouteQuery is a request to obtain route from an origin to a destination.
+message RouteQuery {
+    Node origin = 1;
+    Node destination = 2;
+}
+
+// AddResponse is a placeholder return value for the AddRoute RPC.
+message AddResponse {
+
+}
