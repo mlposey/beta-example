@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 const pathService = new Service();
 app.post('/v1/paths', (req, res) => {
+    console.log('got path request');
     try {
         let path = pathService.findPath(
             req.body.src.x,
